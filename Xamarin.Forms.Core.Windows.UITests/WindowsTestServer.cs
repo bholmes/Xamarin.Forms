@@ -2,10 +2,11 @@
 using OpenQA.Selenium.Appium.Windows;
 using Xamarin.Forms.Controls.Issues;
 using Xamarin.UITest;
+using Xamarin.Forms.Core.UITests.Appium;
 
 namespace Xamarin.Forms.Core.UITests
 {
-	internal class WindowsTestServer : ITestServer
+	internal class WindowsTestServer : AppiumTestServer
 	{
 		readonly WindowsDriver<WindowsElement> _session;
 		readonly WinDriverApp _winDriverApp;
@@ -16,17 +17,7 @@ namespace Xamarin.Forms.Core.UITests
 			_winDriverApp = winDriverApp;
 		}
 
-		public string Post(string endpoint, object arguments = null)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string Put(string endpoint, byte[] data)
-		{
-			throw new NotImplementedException();
-		}
-
-		public string Get(string endpoint)
+		public override string Get(string endpoint)
 		{
 			if (endpoint == "version")
 			{

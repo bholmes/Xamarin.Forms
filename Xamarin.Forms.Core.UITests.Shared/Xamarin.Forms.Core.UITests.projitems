@@ -9,6 +9,9 @@
     <Import_RootNamespace>Xamarin.Forms.Core.UITests.Shared</Import_RootNamespace>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Include="$(MSBuildThisFileDirectory)Appium\AppiumDriverApp.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Appium\AppiumQuery.cs" />
+    <Compile Include="$(MSBuildThisFileDirectory)Appium\AppiumTestServer.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)BaseTestFixture.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformAutomatedTest.cs" />
     <Compile Include="$(MSBuildThisFileDirectory)PlatformQueries.cs" />

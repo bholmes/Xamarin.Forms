@@ -12,7 +12,8 @@ namespace Xamarin.Forms.Core.UITests
 {
 	public class WindowsTestBase
 	{
-		protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
+		//protected const string WindowsApplicationDriverUrl = "http://127.0.0.1:4723";
+		protected const string WindowsApplicationDriverUrl = "http://192.168.1.14:4723/wd/hub";
 		protected static WindowsDriver<WindowsElement> Session;
 
 		public static IApp ConfigureApp()
