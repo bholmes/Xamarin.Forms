@@ -62,7 +62,6 @@
     <Compile Include="WindowsTestBase.cs" />
     <Compile Include="WindowsTestServer.cs" />
     <Compile Include="WinDriverApp.cs" />
-    <Compile Include="WinQuery.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
