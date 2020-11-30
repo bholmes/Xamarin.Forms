@@ -26,7 +26,7 @@ namespace Xamarin.Forms.Controls
 
 		// Have to continue using the old BundleId for now; Test Cloud doesn't like
 		// when you change the BundleId
-		public static string BundleId = "com.xamarin.quickui.controlgallery";
+		public const string BundleId = "com.xamarin.quickui.controlgallery";
 
 		// Have to continue using the old BundleId for now; Test Cloud doesn't like
 		// when you change the BundleId
@@ -83,6 +83,35 @@ namespace Xamarin.Forms.Controls
 
 #if __IOS__
 		static IApp InitializeiOSApp()
+		{
+			return true ? InitializeiOSAppAppium() : InitializeiOSAppUITest();
+		}
+
+		static IApp InitializeiOSAppAppium()
+		{
+			var appiumOptions = new OpenQA.Selenium.Appium.AppiumOptions();
+			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.IOSMobileCapabilityType.BundleId, AppPaths.BundleId);
+			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.PlatformName, "ios");
+			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.DeviceName, "iPhone 8");
+			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.AutomationName, "XCUITest");
+			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.PlatformVersion, "14.2");
+
+			var session = new OpenQA.Selenium.Appium.iOS.IOSDriver<OpenQA.Selenium.Appium.iOS.IOSElement>(new Uri("http://192.168.1.15:4723/wd/hub"), appiumOptions);
+			Assert.IsNotNull(session);
+			session.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
+
+			var app = new IOSDriverApp(session);
+
+			int _iosVersion;
+			if (int.TryParse(app.Invoke("iOSVersion").ToString(), out _iosVersion))
+			{
+				iOSVersion = _iosVersion;
+			}
+
+			return app;
+		}
+
+		static IApp InitializeiOSAppUITest()
 		{
 			string UDID = null;
 

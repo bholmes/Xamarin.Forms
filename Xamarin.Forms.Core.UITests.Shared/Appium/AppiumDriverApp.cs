@@ -66,7 +66,7 @@ namespace Xamarin.Forms.Core.UITests.Appium
 
 		public virtual void DismissKeyboard()
 		{
-			throw new NotImplementedException();
+			Session.HideKeyboard();
 		}
 
 		public virtual void DoubleTap(Func<AppQuery, AppQuery> query)
@@ -402,12 +402,12 @@ namespace Xamarin.Forms.Core.UITests.Appium
 
 		public virtual void SetOrientationLandscape()
 		{
-			throw new NotImplementedException();
+			Session.Orientation = ScreenOrientation.Landscape;
 		}
 
 		public virtual void SetOrientationPortrait()
 		{
-			throw new NotImplementedException();
+			Session.Orientation = ScreenOrientation.Portrait;
 		}
 
 		public virtual void SetSliderValue(string marked, double value)
@@ -560,11 +560,21 @@ namespace Xamarin.Forms.Core.UITests.Appium
 
 		protected ReadOnlyCollection<_AppiumWebElement> QueryWindows(AppiumQuery query, bool findFirst = false)
 		{
-			var resultByAccessibilityId = Session.FindElementsByAccessibilityId(query.Marked);
+			if (query.FilterType == AppiumQuery.FilterTypes.Index)
+			{
+				if (query.ControlType != "*")
+					throw new NotImplementedException();
+
+				var xPathResult = Session.FindElementByXPath($"//*[{int.Parse(query.FilterValue) + 1}]");
+
+				return new ReadOnlyCollection<_AppiumWebElement>(xPathResult == null ? new _AppiumWebElement[] { } : new[] { xPathResult });
+			}
+
+			var resultByAccessibilityId = Session.FindElementsByAccessibilityId(query.FilterValue);
 			ReadOnlyCollection<_AppiumWebElement> resultByName = null;
 
 			if (!findFirst || resultByAccessibilityId.Count == 0)
-				resultByName = Session.FindElementsByName(query.Marked);
+				resultByName = Session.FindElementsByName(query.FilterValue);
 
 			IEnumerable<_AppiumWebElement> result = resultByAccessibilityId;
 
@@ -576,7 +586,11 @@ namespace Xamarin.Forms.Core.UITests.Appium
 			if (query.ControlType == "*")
 			{
 				IEnumerable<_AppiumWebElement> textBoxesByContent =
-					Session.FindElementsByClassName("TextBox").Where(e => e.Text == query.Marked);
+				//Session.FindElementsByClassName("TextBox").Where(e => e.Text == query.Marked);
+
+				// Changing to find by XPath to ensure the query occurs server side.
+				// It may be ok to leave the class as * but we may want to change it to a _controlNameToTag lookup
+				Session.FindElementsByXPath($"//*[@text='{query.FilterValue}']");
 				result = result.Concat(textBoxesByContent);
 			}
 
@@ -645,14 +659,18 @@ namespace Xamarin.Forms.Core.UITests.Appium
 
 		protected AppResult ToAppResult(_AppiumWebElement windowsElement)
 		{
-			return new AppResult
+			var ret = new AppResult
 			{
 				Rect = ToAppRect(windowsElement),
 				Label = windowsElement.Id, // Not entirely sure about this one
 				Description = SwapInUsefulElement(windowsElement).Text, // or this one
 				Enabled = windowsElement.Enabled,
-				Id = windowsElement.Id
+				Id = windowsElement.Id,
 			};
+
+			ret.Text = ret.Description;
+
+			return ret;
 		}
 
 		static AppRect ToAppRect(_AppiumWebElement windowsElement)
