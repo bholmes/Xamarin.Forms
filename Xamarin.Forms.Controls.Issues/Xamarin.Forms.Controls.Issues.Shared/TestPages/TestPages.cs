@@ -96,7 +96,7 @@ namespace Xamarin.Forms.Controls
 			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.AutomationName, "XCUITest");
 			appiumOptions.AddAdditionalCapability(OpenQA.Selenium.Appium.Enums.MobileCapabilityType.PlatformVersion, "14.2");
 
-			var session = new OpenQA.Selenium.Appium.iOS.IOSDriver<OpenQA.Selenium.Appium.iOS.IOSElement>(new Uri("http://192.168.1.15:4723/wd/hub"), appiumOptions);
+			var session = new OpenQA.Selenium.Appium.iOS.IOSDriver<OpenQA.Selenium.Appium.iOS.IOSElement>(new Uri("http://127.0.0.1:4723/wd/hub"), appiumOptions);
 			Assert.IsNotNull(session);
 			session.Manage().Timeouts().ImplicitWait = TimeSpan.FromSeconds(1);
 
