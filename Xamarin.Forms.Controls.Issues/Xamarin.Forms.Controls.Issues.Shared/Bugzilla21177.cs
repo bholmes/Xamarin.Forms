@@ -36,6 +36,7 @@ namespace Xamarin.Forms.Controls.Issues
 		{
 			var view = new CollectionView() { AutomationId = "view" };
 			view.ItemSelected += View_ItemSelected;
+			view.SetAutomationPropertiesIsInAccessibleTree(false);
 			Content = view;
 		}
 
